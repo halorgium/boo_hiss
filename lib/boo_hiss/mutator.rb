@@ -31,7 +31,7 @@ module BooHiss
 
     # Remove the body of the defn
     def mutate_defn(node)
-      [:defn, node[0], [:scope, [:block, [:args], [:nil]]]]
+      [:defn, node[1], [:scope, [:block, [:args], [:nil]]]]
     end
 
     # Replaces the call node with nil.
@@ -83,26 +83,17 @@ module BooHiss
     alias mutate_lasgn mutate_asgn
 
     # Replaces the value of the :lit node with a random value.
-    def mutate_lit(exp)
-      case exp[1]
+    def mutate_lit(node)
+      case node[1]
       when Fixnum, Float, Bignum
-        [:lit, exp[1] + rand_number]
+        [:lit, node[1] + rand_number]
       when Symbol
-        [:lit, rand_symbol]
+        [:lit, rand_string.to_sym]
       when Regexp
         [:lit, Regexp.new(Regexp.escape(rand_string.gsub(/\//, '\\/')))]
       when Range
         [:lit, rand_range]
       end
-    end
-
-    def rand_string
-      alpha = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
-      buf = ""
-      rand(50).times do
-        buf << alpha[rand(alpha.size)]
-      end
-      buf
     end
 
     # Replaces the value of the :str node with a random value.
@@ -128,6 +119,26 @@ module BooHiss
     # Swaps for a :until node.
     def mutate_while(node)
       [:until, node[1], node[2], node[3]]
+    end
+    
+    private
+    def rand_string
+      alpha = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
+      buf = ""
+      rand(50).times do
+        buf << alpha[rand(alpha.size)]
+      end
+      buf
+    end
+    
+    def rand_number
+      (rand(100) + 1) * ((-1) ** rand(2))
+    end
+    
+    def rand_range
+      min = rand(50)
+      max = min + rand(50)
+      min..max
     end
   end
 end

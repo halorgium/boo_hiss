@@ -14,3 +14,12 @@ module BooHiss
   end
 end
 
+class MockMutation
+  def initialize(kind = nil)
+    @kind = kind
+  end
+  
+  def mutate?(node)
+    true if node.first == @kind || !@kind
+  end
+end
