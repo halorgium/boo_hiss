@@ -1,20 +1,15 @@
 module BooHiss
   describe Reaper do
-    def locate_in(string)
-      sexp = ParseTree.new.parse_tree_for_string(string)
-      Reaper.locate_in(sexp.first)
-    end
-
     describe "with a single string" do
       it "finds the string mutation" do
-        reaper = locate_in('"test"')
-        reaper.mutations.should == [[:str, "test"]]
+        mutations = Reaper.locate_in(parse('"test"'))
+        mutations.should == [[:str, "test"]]
       end
     end
 
     describe "with a method with an if and a few lit and str" do
       it "finds the string mutation" do
-        reaper = locate_in <<-EOT
+        sexp = parse <<-EOT
           def foo(a, b)
             if a == 1
               "awesome"
@@ -23,7 +18,8 @@ module BooHiss
             end
           end
         EOT
-        reaper.mutations.should ==
+        mutations = Reaper.locate_in(sexp)
+        mutations.should ==
           [[:lit, 1],
            [:call, s(:lvar, s(:a)), :==, s(:array, s(:lit, 1))],
            [:str, "awesome"],

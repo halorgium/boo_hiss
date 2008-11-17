@@ -18,19 +18,4 @@ module BooHiss
       @m.exp.should == [:defn, :an_instance_method, [:scope, [:block, [:args], [:nil]]]]
     end
   end
-
-  describe "Processing an instance method" do
-    before(:each) do
-      @m = Mob.new(FixtureClasses::JustAString, :work)
-      @result = @m.enrage
-    end
-
-    it "foo" do
-      @m.exp.should == []
-      #@result.should == []
-      pp @result.to_a
-      require 'ruby2ruby'
-      puts = Ruby2Ruby.new.process(@result)
-    end
-  end
 end

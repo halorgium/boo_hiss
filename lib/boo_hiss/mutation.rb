@@ -1,7 +1,7 @@
 module BooHiss
   class Mutation
-    def initialize(exp)
-      
+    def mutate?(node)
+      true
     end
   end
 end

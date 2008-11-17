@@ -1,7 +1,11 @@
 module BooHiss
   class Mutator
-    def initialize(mob, exp)
-      @mob, @exp = mob, exp
+    def self.run(mutation, exp)
+      new(mutation, exp).run
+    end
+
+    def initialize(mutation, exp)
+      @mutation, @exp = mutation, exp
     end
 
     def run
@@ -17,17 +21,12 @@ module BooHiss
 
       #increment_node_count node
 
-      puts "At a mutation point: #{@processor.inspect}"
-      if mutate?(node) then
+      if @mutation.mutate?(node)
         #increment_mutation_count node
         Sexp.from_array(send(mutation_method, node))
       else
         Sexp.from_array(node)
       end
-    end
-
-    def mutate?(node)
-      @mutated
     end
 
     # Remove the body of the defn
@@ -95,6 +94,15 @@ module BooHiss
       when Range
         [:lit, rand_range]
       end
+    end
+
+    def rand_string
+      alpha = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a
+      buf = ""
+      rand(50).times do
+        buf << alpha[rand(alpha.size)]
+      end
+      buf
     end
 
     # Replaces the value of the :str node with a random value.
