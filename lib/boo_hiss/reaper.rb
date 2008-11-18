@@ -1,23 +1,21 @@
 module BooHiss
   class Reaper
-    def self.locate_in(exp)
-      new.locate_in(exp)
+    def self.count_in(exp)
+      new(exp).mutation_count
+    end
+    
+    def initialize(exp)
+      @exp, @incr = exp, 0
     end
 
-    def locate_in(exp)
-      p = Processor.new(self)
-      p.process(exp)
-      mutations
+    def mutation_count
+      Processor.run(self, @exp)
+      @incr
     end
 
     def handle(node)
-      sexp = Sexp.from_array(node)
-      mutations << node
-      sexp
-    end
-
-    def mutations
-      @mutations ||= []
+      @incr += 1
+      Sexp.from_array(node)
     end
   end
 end

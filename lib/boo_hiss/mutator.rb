@@ -1,16 +1,15 @@
 module BooHiss
   class Mutator
-    def self.run(mutation, exp)
-      new(mutation, exp).run
+    def self.run(exp, position)
+      new(exp, position).run
     end
 
-    def initialize(mutation, exp)
-      @mutation, @exp = mutation, exp
+    def initialize(exp, position)
+      @exp, @position, @nodes_received = exp, position, []
     end
 
     def run
-      @processor = Processor.new(self)
-      @processor.process(@exp)
+      Processor.run(self, @exp)
     end
 
     def handle(node)
@@ -19,14 +18,16 @@ module BooHiss
         raise UnsupportedNodeError, "`#{node.first}' is not supported as a mutatable node"
       end
 
-      #increment_node_count node
-
-      if @mutation.mutate?(node)
-        #increment_mutation_count node
+      if mutate?(node)
         Sexp.from_array(send(mutation_method, node))
       else
         Sexp.from_array(node)
       end
+    end
+
+    def mutate?(node)
+      @nodes_received << node
+      @nodes_received.size == @position + 1
     end
 
     # Remove the body of the defn

@@ -1,11 +1,13 @@
 module BooHiss
   class Processor < SexpProcessor
-    def initialize(mutator)
+    def self.run(callback, sexp)
+      new(callback).process(sexp)
+    end
+    
+    def initialize(callback)
       super()
-      @mutator = mutator
-      self.warn_on_default = true
-      self.default_method = :unhandled
-      self.strict = true
+      @callback = callback
+      self.warn_on_default = false
       self.auto_shift_type = true
     end
 
@@ -20,7 +22,7 @@ module BooHiss
       stack = caller.map { |s| s[/process_\w+/] }.compact
 
       if stack.first != "process_iter" then
-        @mutator.handle out
+        @callback.handle out
       else
         Sexp.from_array(out)
       end
@@ -29,7 +31,7 @@ module BooHiss
     def process_defn(exp)
       result = [:defn, exp.shift]
       result << process(exp.shift) until exp.empty?
-      @mutator.handle result
+      @callback.handle result
     end
 
     # So process_call works correctly
@@ -40,9 +42,9 @@ module BooHiss
     def process_asgn(type, exp)
       var = exp.shift
       if exp.empty? then
-        @mutator.handle [type, var]
+        @callback.handle [type, var]
       else
-        @mutator.handle [type, var, process(exp.shift)]
+        @callback.handle [type, var, process(exp.shift)]
       end
     end
 
@@ -71,47 +73,33 @@ module BooHiss
     end
 
     def process_lit(exp)
-      @mutator.handle [:lit, exp.shift]
+      @callback.handle [:lit, exp.shift]
     end
 
     def process_str(exp)
-      @mutator.handle [:str, exp.shift]
+      @callback.handle [:str, exp.shift]
     end
 
     def process_if(exp)
-      @mutator.handle [:if, process(exp.shift), process(exp.shift), process(exp.shift)]
+      @callback.handle [:if, process(exp.shift), process(exp.shift), process(exp.shift)]
     end
 
     def process_true(exp)
-      @mutator.handle [:true]
+      @callback.handle [:true]
     end
 
     def process_false(exp)
-      @mutator.handle [:false]
+      @callback.handle [:false]
     end
 
     def process_while(exp)
       cond, body, head_controlled = grab_conditional_loop_parts(exp)
-      @mutator.handle [:while, cond, body, head_controlled]
+      @callback.handle [:while, cond, body, head_controlled]
     end
 
     def process_until(exp)
       cond, body, head_controlled = grab_conditional_loop_parts(exp)
-      @mutator.handle [:until, cond, body, head_controlled]
-    end
-
-    def unhandled(exp)
-      result = Sexp.new(exp.shift)
-      until exp.empty?
-        node = exp.shift
-        case node
-        when Array
-          result << process(node)
-        else
-          result << s(node)
-        end
-      end
-      result
+      @callback.handle [:until, cond, body, head_controlled]
     end
 
     def grab_conditional_loop_parts(exp)

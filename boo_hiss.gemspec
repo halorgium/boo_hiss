@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Tim Carey-Smith"]
-  s.date = %q{2008-11-17}
+  s.date = %q{2008-11-18}
   s.description = %q{Generate a unique token with Active Record.}
   s.email = %q{tim@halorgium.net}
-  s.extra_rdoc_files = ["README.rdoc", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutation.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss.rb"]
-  s.files = ["README.rdoc", "Rakefile", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutation.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss.rb", "spec/fixtures.rb", "spec/mob_spec.rb", "spec/mutator_spec.rb", "spec/processor_spec.rb", "spec/reaper_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "Manifest", "boo_hiss.gemspec"]
+  s.extra_rdoc_files = ["README.rdoc", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss/reporter.rb", "lib/boo_hiss/silent_reporter.rb", "lib/boo_hiss.rb", "tasks/extensions.rake", "tasks/spec.rake"]
+  s.files = ["Manifest", "README.rdoc", "Rakefile", "boo_hiss.gemspec", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss/reporter.rb", "lib/boo_hiss/silent_reporter.rb", "lib/boo_hiss.rb", "spec/mob_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/extensions.rake", "tasks/spec.rake"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/halorgium/boo_hiss}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Boo_hiss", "--main", "README.rdoc"]
