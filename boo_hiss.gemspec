@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = %q{tim@halorgium.net}
   s.executables = ["boo_hiss"]
   s.extra_rdoc_files = ["README.rdoc", "bin/boo_hiss", "lib/boo_hiss/cli.rb", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss/reporter.rb", "lib/boo_hiss/silent_reporter.rb", "lib/boo_hiss/version.rb", "lib/boo_hiss.rb", "tasks/extensions.rake", "tasks/spec.rake"]
-  s.files = ["Manifest", "README.rdoc", "Rakefile", "bin/boo_hiss", "lib/boo_hiss/cli.rb", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss/reporter.rb", "lib/boo_hiss/silent_reporter.rb", "lib/boo_hiss/version.rb", "lib/boo_hiss.rb", "spec/mob_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/extensions.rake", "tasks/spec.rake", "boo_hiss.gemspec"]
+  s.files = ["Manifest", "README.rdoc", "Rakefile", "bin/boo_hiss", "boo_hiss.gemspec", "lib/boo_hiss/cli.rb", "lib/boo_hiss/mob.rb", "lib/boo_hiss/mutator.rb", "lib/boo_hiss/processor.rb", "lib/boo_hiss/reaper.rb", "lib/boo_hiss/reporter.rb", "lib/boo_hiss/silent_reporter.rb", "lib/boo_hiss/version.rb", "lib/boo_hiss.rb", "spec/mob_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "tasks/extensions.rake", "tasks/spec.rake"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/halorgium/boo_hiss}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Boo_hiss", "--main", "README.rdoc"]

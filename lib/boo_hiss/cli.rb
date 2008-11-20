@@ -13,6 +13,10 @@ module BooHiss
 
     def run
       option_parser.parse!(@argv)
+
+      @libraries.each do |l|
+        require l
+      end
       klass = klass_for(@argv.shift)
       method_name = @argv.shift
 
@@ -35,7 +39,8 @@ module BooHiss
         end
 
         opts.on("-r library", "--require library", "Require the library to bootstrap your code") do |library|
-          require library
+          @libraries ||= []
+          @libraries << library
         end
 
         opts.on("-o rspec-argv", "--options rspec-argv", "Arguments to pass through to RSpec") do |argv|
@@ -121,6 +126,12 @@ module BooHiss
         else
           puts "Mutation #{position} triggered a test suite failure, good work!"
         end
+        puts
+      end
+
+      def code_sexp(position, sexp)
+        puts "The sexp for mutation #{position} is: "
+        p sexp
         puts
       end
 
