@@ -8,6 +8,10 @@ module BooHiss
       raise NotImplementedError, "Define `record_initial_test_result(result, err, out)' in a subclass"
     end
 
+    def record_original_code(code)
+      raise NotImplementedError, "Define `record_original_code(code)' in a subclass"
+    end
+
     def count_mutations(count)
       raise NotImplementedError, "Define `count_mutations(count)' in a subclass"
     end

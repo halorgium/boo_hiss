@@ -19,6 +19,9 @@ module BooHiss
       @initial_test_result, @initial_err, @initial_out = result, err, out
     end
 
+    def record_original_code(code)
+    end
+
     def count_mutations(count)
       @mutation_count = count
     end

@@ -1,7 +1,5 @@
 module BooHiss
   class Mob
-    class InitialTestFailure < Error; end
-
     def initialize(klass, method_name, tester, reporter)
       @klass, @method_name, @tester, @reporter = klass, method_name, tester, reporter
     end
@@ -10,12 +8,9 @@ module BooHiss
       @reporter.record_initial_test_run
       result, err, out = tests_pass?
       @reporter.record_initial_test_result(result, err, out)
-      unless result
-        puts err
-        puts out
-        raise InitialTestFailure, "The initial test run did not pass"
-      end
+
       @original_src = render_code
+      @reporter.record_original_code(@original_src)
 
       mutation_count.times do |position|
         @reporter.mutation_test_run(position)
@@ -33,7 +28,7 @@ module BooHiss
       code = nil
       begin
         code = Ruby2Ruby.new.process(sexp)
-      rescue Ruby2Ruby::Error
+      rescue
         @reporter.exception_in_eval(position, $!)
         raise
       end
@@ -68,19 +63,17 @@ module BooHiss
 
     def diff(original, mutation)
       length = [original.split(/\n/).size, mutation.split(/\n/).size].max
- 
+
       Tempfile.open("orig") do |a|
         a.puts(original)
         a.flush
- 
+
         Tempfile.open("fail") do |b|
           b.puts(mutation)
           b.flush
- 
-          diff_flags = " "
- 
+
           output = `diff -U #{length} --label original #{a.path} --label mutation #{b.path}`
-          output.sub(/^@@.*?\n/, '')
+          return output.sub(/^@@.*?\n/, '')
         end
       end
     end

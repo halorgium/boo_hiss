@@ -1,13 +1,16 @@
 Manifest
 README.rdoc
 Rakefile
+bin/boo_hiss
 boo_hiss.gemspec
+lib/boo_hiss/cli.rb
 lib/boo_hiss/mob.rb
 lib/boo_hiss/mutator.rb
 lib/boo_hiss/processor.rb
 lib/boo_hiss/reaper.rb
 lib/boo_hiss/reporter.rb
 lib/boo_hiss/silent_reporter.rb
+lib/boo_hiss/version.rb
 lib/boo_hiss.rb
 spec/mob_spec.rb
 spec/spec.opts

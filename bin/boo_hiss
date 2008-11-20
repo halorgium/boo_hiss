@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + '/../lib'
+require 'boo_hiss'
+
+BooHiss::CLI.run(ARGV)
+
+# vim:filetype=ruby
