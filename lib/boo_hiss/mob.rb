@@ -27,6 +27,13 @@ module BooHiss
       @reporter.code_sexp(position, sexp.deep_clone)
       code = nil
       begin
+        unifier = Unifier.new
+
+        unifier.processors.each do |p|
+          p.unsupported.delete :cfunc # HACK
+        end
+
+        sexp = unifier.process(sexp)
         code = Ruby2Ruby.new.process(sexp)
       rescue
         @reporter.exception_in_eval(position, $!)
