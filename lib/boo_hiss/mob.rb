@@ -17,10 +17,11 @@ module BooHiss
         sexp = Mutator.run(original_sexp, position)
         eval_sexp(position, sexp)
 
-        @reporter.mutation_test_run(position)
         result, err, out = tests_pass?(position)
         @reporter.mutation_test_result(position, result, err, out)
       end
+
+      @reporter.completed
     end
 
     def eval_sexp(position, sexp)

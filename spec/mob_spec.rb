@@ -15,7 +15,7 @@ module BooHiss
 
   describe "Starting a", Mob do
     def start_mob_for(klass, method_name, &block)
-      @reporter = SilentReporter.new
+      @reporter = SilentReporter.new(nil)
       tester = ExampleGroup::Tester.new(klass, method_name, &block)
       Mob.new(klass, method_name, tester, @reporter)
     end

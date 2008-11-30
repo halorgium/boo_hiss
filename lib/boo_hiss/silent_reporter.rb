@@ -7,10 +7,10 @@ module BooHiss
       attr_accessor :result, :err, :out, :sexp, :diff, :exception_in_eval, :exception_in_test
     end
 
-    def initialize
+    def initialize(cli)
       @mutations = {}
     end
-    attr_reader :initial_test_result, :mutation_count, :mutations
+    attr_reader :initial_test_result, :mutation_count, :mutations, :completed
 
     def record_initial_test_run
     end
@@ -42,6 +42,10 @@ module BooHiss
 
     def code_diff(position, diff)
       @mutations[position].diff = diff
+    end
+
+    def completed
+      @completed = true
     end
 
     def exception_in_eval(position, exception)

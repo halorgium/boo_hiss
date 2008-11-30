@@ -1,5 +1,8 @@
 module BooHiss
   class Reporter
+    def initialize(cli)
+    end
+
     def record_initial_test_run
       raise NotImplementedError, "Define `record_initial_test_run' in a subclass"
     end
@@ -30,6 +33,10 @@ module BooHiss
 
     def code_diff(position, diff)
       raise NotImplementedError, "Define `code_diff(position, diff)' in a subclass"
+    end
+
+    def completed
+      raise NotImplementedError, "Define `completed' in a subclass"
     end
 
     def exception_in_eval(position, exception)

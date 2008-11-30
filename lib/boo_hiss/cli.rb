@@ -1,5 +1,4 @@
 require "spec"
-require "term/ansicolor"
 
 module BooHiss
   class CLI
@@ -8,8 +7,9 @@ module BooHiss
     end
 
     def initialize(argv)
-      @argv = argv
+      @argv, @libraries = argv, []
     end
+    attr_reader :argv
 
     def run
       option_parser.parse!(@argv)
@@ -17,8 +17,7 @@ module BooHiss
       @libraries.each do |l|
         require l
       end
-      klass = klass_for(@argv.shift)
-      method_name = @argv.shift
+      klass, method_name = klass_and_method_for(@argv.shift)
 
       mob = Mob.new(klass, method_name, tester, reporter)
       mob.enrage
@@ -43,14 +42,14 @@ module BooHiss
           @libraries << library
         end
 
-        opts.on("-o rspec-argv", "--options rspec-argv", "Arguments to pass through to RSpec") do |argv|
-          @rspec_argv = argv
-        end
-
         opts.on("-x", "--exit", "Exit on a mutation which doesn't cause a failure") do
           puts "I am going to exit on the first mutation which doesn't cause a failure"
           puts
           @exit_on_bad_mutation = true
+        end
+
+        opts.on("-R name", "--reporter name", "Choose the reporting to use") do |name|
+          @reporter_name = name
         end
 
         opts.separator ""
@@ -62,15 +61,39 @@ module BooHiss
     end
 
     def tester
-      @tester ||= Tester.new(@rspec_argv)
+      @tester ||= Tester.new(self)
     end
+
+    REPORTERS = {
+      "default" => DefaultReporter,
+      "formatted" => FormattedReporter,
+    }
 
     def reporter
-      @reporter ||= Magic.new(self)
+      @reporter ||= begin
+        REPORTERS[reporter_name].new(self)
+      end
     end
 
-    def klass_for(klass_name)
-      list = klass_name.split("::")
+    def reporter_name
+      @reporter_name ||= "default"
+    end
+
+    def klass_and_method_for(klass_and_method)
+      case klass_and_method
+      when /^(.+)#(.+)$/
+        [klass_for($1), $2]
+      when /^(.+)\.(.+)$/
+        [class << klass_for($1); self; end, $2]
+      when /^(.+)$/
+        [klass_for($1), nil]
+      else
+        raise Error, "Unknown class/method format, #{klass_and_method}"
+      end
+    end
+
+    def klass_for(name)
+      list = name.split("::")
       list.shift if list.first == ""
       obj = Object
       list.each do |x|
@@ -81,82 +104,14 @@ module BooHiss
       obj
     end
 
-    class Magic
-      C = Term::ANSIColor
-
+    class Tester
       def initialize(cli)
         @cli = cli
       end
 
-      def record_initial_test_result(result, err, out)
-        if result
-          puts "The test suite passed on a clean non-mutated code base"
-          puts "Continuing with the mutations!"
-          puts
-        else
-          C.red
-          puts "The test suite did not pass with no mutations applied"
-          puts "Fix the following problems: "
-          C.reset
-          puts err
-          puts out
-          exit
-        end
-      end
-
-      def record_original_code(code)
-        puts "The code being mutated is: "
-        puts code
-        puts
-      end
-
-      def count_mutations(count)
-        puts "Found #{count} mutations to apply!"
-        puts
-      end
-
-      def mutation_test_result(position, result, err, out)
-        if result
-          puts "Mutation #{position} caused no errors! Bad!"
-
-          if @cli.exit_on_bad_mutation?
-            puts "Time to get back to work"
-            exit
-          end
-        else
-          puts "Mutation #{position} triggered a test suite failure, good work!"
-        end
-        puts
-      end
-
-      def code_sexp(position, sexp)
-        puts "The sexp for mutation #{position} is: "
-        p sexp
-        puts
-      end
-
-      def code_diff(position, diff)
-        puts "The diff for mutation #{position} is: "
-        diff.gsub!(/^(-.*)$/) {|f| C.red(f)}
-        diff.gsub!(/^(\+.*)$/) {|f| C.green(f)}
-        puts diff
-        puts
-      end
-
-      def method_missing(name, *args)
-        #puts "Got a call to #{name} with: "
-        #p args
-      end
-    end
-
-    class Tester
-      def initialize(argv)
-        @argv = argv
-      end
-
       def passes?
         err, out = "", ""
-        options = Spec::Runner::OptionParser.parse(@argv, StringIO.new(err), StringIO.new(out))
+        options = Spec::Runner::OptionParser.parse(@cli.argv.dup, StringIO.new(err), StringIO.new(out))
         result = Spec::Runner::CommandLine.run(options)
         if options.example_groups.empty?
           puts "No tests!?"
@@ -167,6 +122,5 @@ module BooHiss
         [result, err, out]
       end
     end
-
   end
 end
