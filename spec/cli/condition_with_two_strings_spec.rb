@@ -2,7 +2,7 @@ describe "Invoking the CLI inside 'fixtures/condition_with_two_strings'" do
   describe "with: -r lib/impl -R simple SimpleConditionWithTwoStrings#same?" do
     before(:all) do
       @old_cwd = Dir.pwd
-      Dir.chdir(File.dirname(__FILE__) + '/../fixtures/condition_with_two_strings')
+      Dir.chdir(File.dirname(__FILE__) + '/../../fixtures/condition_with_two_strings')
     end
 
     after(:all) do
