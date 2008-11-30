@@ -21,6 +21,8 @@ module BooHiss
 
       mob = Mob.new(klass, method_name, tester, reporter)
       mob.enrage
+
+      reporter
     end
 
     def option_parser
@@ -67,6 +69,7 @@ module BooHiss
     REPORTERS = {
       "default" => DefaultReporter,
       "formatted" => FormattedReporter,
+      "silent" => SilentReporter,
     }
 
     def reporter
