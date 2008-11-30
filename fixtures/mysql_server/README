@@ -1,0 +1,5 @@
+To run with mocks:
+MOCK=1 spec -O spec/spec.opts spec/mysql_server_spec.rb 
+
+To run without mocks:
+spec -O spec/spec.opts spec/mysql_server_spec.rb 

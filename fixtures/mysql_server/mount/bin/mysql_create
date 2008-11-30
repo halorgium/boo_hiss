@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ -f $1/lib/$2 ]; then
+  echo "db already exists"
+  exit 1
+fi
+
+touch $1/lib/$2
+echo "created"

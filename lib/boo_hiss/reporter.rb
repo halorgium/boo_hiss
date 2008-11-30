@@ -11,6 +11,10 @@ module BooHiss
       raise NotImplementedError, "Define `record_initial_test_result(result, err, out)' in a subclass"
     end
 
+    def exception_in_initial_test(exception)
+      raise NotImplementedError, "Define `exception_in_initial_test(exception)' in a subclass"
+    end
+
     def record_original_code(code)
       raise NotImplementedError, "Define `record_original_code(code)' in a subclass"
     end

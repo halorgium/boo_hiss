@@ -6,7 +6,7 @@ module BooHiss
 
     def enrage
       @reporter.record_initial_test_run
-      result, err, out = tests_pass?
+      result, err, out = initial_tests_pass?
       @reporter.record_initial_test_result(result, err, out)
 
       @original_src = render_code
@@ -17,7 +17,7 @@ module BooHiss
         sexp = Mutator.run(original_sexp, position)
         eval_sexp(position, sexp)
 
-        result, err, out = tests_pass?(position)
+        result, err, out = mutation_tests_pass?(position)
         @reporter.mutation_test_result(position, result, err, out)
       end
 
@@ -49,7 +49,14 @@ module BooHiss
       Ruby2Ruby.translate(@klass, @method_name)
     end
 
-    def tests_pass?(position = nil)
+    def initial_tests_pass?
+      @tester.passes?
+    rescue
+      @reporter.exception_in_initial_test($!)
+      raise
+    end
+
+    def mutation_tests_pass?(position)
       @tester.passes?
     rescue
       @reporter.exception_in_test(position, $!)

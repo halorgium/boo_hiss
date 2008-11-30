@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cd $1/lib && ls -1 * 2>/dev/null

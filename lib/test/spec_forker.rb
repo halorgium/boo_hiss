@@ -100,7 +100,6 @@ module SpecForker
 
     forking = (ENV["FORK"] ? ENV["FORK"] == "1" : forking_environment?)
     base_dir = File.expand_path(File.dirname(__FILE__) + "/../..")
-    puts base_dir
 
     counter = Counter.new
     forks   = 0

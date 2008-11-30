@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ ! -d $1 ]; then
+  echo "bad data dir"
+  exit 2
+fi
+
+if [ -f $1/lib/mysql ]; then
+  echo "already installed"
+  exit 1
+fi
+
+touch $1/lib/mysql
+echo "installed"

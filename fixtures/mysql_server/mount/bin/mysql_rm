@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ ! -f $1/lib/$2 ]; then
+  echo "db non-existant"
+  exit 1
+fi
+
+rm $1/lib/$2
+echo "removed"

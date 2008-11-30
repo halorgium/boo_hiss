@@ -23,6 +23,10 @@ module BooHiss
       @initial_test_result, @initial_err, @initial_out = result, err, out
     end
 
+    def exception_in_initial_test(exception)
+      @initial_test_exception = exception
+    end
+
     def record_original_code(code)
     end
 
@@ -54,11 +58,11 @@ module BooHiss
     end
 
     def exception_in_eval(position, exception)
-      @mutations[position].exception_in_eval = exception
+      mutation_at(position).exception_in_eval = exception
     end
 
     def exception_in_test(position, exception)
-      @mutations[position].exception_in_test = exception
+      mutation_at(position).exception_in_test = exception
     end
 
     def mutations_with_eval_exceptions
@@ -80,7 +84,11 @@ module BooHiss
     end
 
     def mutation_at(position)
-      @mutations.find {|m| m.position == position}
+      if mutation = @mutations.find {|m| m.position == position}
+        mutation
+      else
+        raise IndexError, "Could not find a mutation at position #{position}"
+      end
     end
   end
 end
